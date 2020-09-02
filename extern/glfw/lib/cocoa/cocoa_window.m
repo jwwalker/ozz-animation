@@ -615,8 +615,18 @@ static int convertMacKeyCode( unsigned int macKeyCode )
 
 - (void)scrollWheel:(NSEvent *)event
 {
-    _glfwInput.WheelPosFloating += [event deltaY];
-    _glfwInput.WheelPos = lrint( _glfwInput.WheelPosFloating );
+	BOOL isShifted = (event.modifierFlags & NSEventModifierFlagShift) != 0;
+	CGFloat scrollDelta = 0.0;
+	if (@available( macOS 10.7, * ))
+	{
+		scrollDelta = isShifted? event.scrollingDeltaX : event.scrollingDeltaY;
+	}
+	else
+	{
+		scrollDelta = isShifted? event.deltaX : event.deltaY;
+	}
+    _glfwInput.WheelPosFloating += scrollDelta;
+    _glfwInput.WheelPos = (int) lrint( _glfwInput.WheelPosFloating );
 
     if( _glfwWin.mouseWheelCallback )
     {
