@@ -59,7 +59,6 @@ const float kScrollFactor = .03f;
 const float kPanFactor = .05f;
 const float kKeyboardFactor = 100.f;
 const float kNear = .01f;
-const float kFar = 1000.f;
 const float kFovY = ozz::math::kPi / 3.f;
 const float kFrameAllZoomOut = 1.3f;  // 30% bigger than the scene.
 
@@ -263,9 +262,9 @@ void Camera::Resize(int _width, int _height) {
   projection_.cols[0] = math::simd_float4::Load(kNear / w, 0.f, 0.f, 0.f);
   projection_.cols[1] = math::simd_float4::Load(0.f, kNear / h, 0.f, 0.f);
   projection_.cols[2] =
-      math::simd_float4::Load(0.f, 0.f, -(kFar + kNear) / (kFar - kNear), -1.f);
+      math::simd_float4::Load(0.f, 0.f, -1.0f, -1.f);
   projection_.cols[3] = math::simd_float4::Load(
-      0.f, 0.f, -(2.f * kFar * kNear) / (kFar - kNear), 0.f);
+      0.f, 0.f, -2.f * kNear, 0.f);
 
   // Computes the 2D projection matrix.
   projection_2d_.cols[0] = math::simd_float4::Load(2.f / _width, 0.f, 0.f, 0.f);
